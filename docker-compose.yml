@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: wault_postgres
+    environment:
+      POSTGRES_USER: wault_user
+      POSTGRES_PASSWORD: wault_pass
+      POSTGRES_DB: wault_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wault_user -d wault_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - wault_network
+
+  neo4j:
+    image: neo4j:5
+    container_name: wault_neo4j
+    environment:
+      NEO4J_AUTH: neo4j/wault_neo4j_pass
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    restart: unless-stopped
+    networks:
+      - wault_network
+
+networks:
+  wault_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  neo4j_data:

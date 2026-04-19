@@ -1,0 +1,13 @@
+node_modules/
+.env
+*.env.local
+dist/
+build/
+.prisma/
+*.pkl
+__pycache__/
+*.pyc
+.venv/
+deployments/
+coverage/
+.DS_Store
